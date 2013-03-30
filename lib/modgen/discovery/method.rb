@@ -13,8 +13,6 @@ module Modgen
         @http_method = values['http_method']
         @description = values['description']
         @parameters  = values['parameters']
-
-        build_method
       end
 
       def call(params)
@@ -36,7 +34,7 @@ module Modgen
       def validate_parameter(param, spec, value)
         if value.nil?
           if spec['required']
-            raise Modgen::APIRequestError, "Parameter: #{param} is required."
+            raise Modgen::APIRequestError, "Parameter #{param} is required."
           end
 
           return 'next'
@@ -50,6 +48,9 @@ module Modgen
             check_type(param, value, Hash)
             validate_parameters(spec['attributes'], value)
           when 'file'
+            if !File.file?(value)
+              raise Modgen::APIRequestError, "File #{value} doesn't exists."
+            end
         end
 
         if spec['format']
@@ -76,20 +77,36 @@ module Modgen
         end
       end
 
+      def build_parameters(params = {})
+        result = {
+          'path'  => {},
+          'query' => {},
+          'body'  => {},
+          'files' => {}
+        }
+
+        params.each do |key, value|
+          if @parameters[key]['type'] == 'file'
+            result['files'][key] = value
+          else
+            type = @parameters[key]['location']
+            result[type][key] = value
+          end
+        end
+
+        result
+      end
+
       def query(params)
         if !params.is_a?(Hash)
           raise Modgen::TypeError, "Parameters must be Hash. #{params.class.name} inserted."
         end
 
-        params = validate_parameters(@parameters, params)
-        # Modgen::API::Request.new(self, params).response
+        validate_parameters(@parameters, params)
+
+        params = build_parameters(params)
+        Modgen::API::Request.new(self, params).response
       end
-
-      private
-
-        def build_method
-          
-        end
 
     end
   end

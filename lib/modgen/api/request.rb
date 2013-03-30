@@ -8,6 +8,7 @@ module Modgen
         @path  = params['path']
         @query = params['query']
         @body  = params['body']
+        @files = params['files']
 
         @uri  = @method.full_path.to_s.gsub(/:([a-z][a-z0-9_]*)/) { @path[$1] }
         @uri += "?" + @query.to_param
