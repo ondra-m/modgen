@@ -25,38 +25,45 @@ module Modgen
         query(params)
       end
 
-      def validate_require(key, value, required)
-        if value.nil? && required
-          raise Modgen::APIRequestError, "Parameter: #{key} is required"
+      def check_type(param, value, *types)
+        types.each do |type|
+          return(true) if value.is_a?(type)
         end
+
+        raise Modgen::APIRequestError, "Parameter #{param} has invalid type. Must be #{types.join(' or ')}."
       end
 
-      def validate_type(value, type)
-        case type
-          when 'integer'
-            if !value.is_a?(Integer)
-              raise Modgen::APIRequestError, "Parameter: #{key} must be Integer"
-            end
-          when 'float'
-            if !value.is_a?(Integer) && !value.is_a?(Float)
-              raise Modgen::APIRequestError, "Parameter: #{key} must be Float"
-            end
-          when 'string'
-            if !value.is_a?(String)
-              raise Modgen::APIRequestError, "Parameter: #{key} must be String"
-            end
+      def validate_parameter(param, spec, value)
+        if value.nil?
+          if spec['required']
+            raise Modgen::APIRequestError, "Parameter: #{param} is required."
+          end
+
+          return 'next'
+        end
+
+        case spec['type']
+          when 'integer'; check_type(param, value, Integer)
+          when 'float';   check_type(param, value, Integer, Float)
+          when 'string';  check_type(param, value, String)
           when 'hash'
-            if !value.is_a?(Hash)
-              raise Modgen::APIRequestError, "Parameter: #{key} must be Hash"
+            check_type(param, value, Hash)
+
+            value.stringify_keys!
+
+            spec['attributes'].each do |k, v|
+              param_value = value[k]
+
+              if validate_parameter(k, v, param_value) == 'next'
+                next
+              end
             end
           when 'file'
         end
-      end
 
-      def validate_format(key, value, format)
-        if format
-          unless value =~ /#{format}/
-            raise Modgen::APIRequestError, "Parameter: #{key} doesnt have required format (#{format})"
+        if spec['format']
+          unless value =~ /#{spec['format']}/
+            raise Modgen::APIRequestError, "Parameter #{param} hasn't required format (#{spec['format']})."
           end
         end
       end
@@ -70,19 +77,14 @@ module Modgen
           'body'  => {}
         }
 
-        @parameters.each do |key, value|
-          param = params[key]
+        @parameters.each do |param, spec|
+          value = params[param]
 
-          validate_require(key, param, value['required'])
-
-          if param.nil?
+          if validate_parameter(param, spec, value) == 'next'
             next
           end
 
-          validate_type(param, value['type'])
-          validate_format(key, param, value['format'])
-
-          validated_parameters[value['location']][key] = params.delete(key)
+          validated_parameters[spec['location']][param] = params.delete(param)
         end
 
         # Unknow parameters
