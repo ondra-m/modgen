@@ -1,0 +1,80 @@
+{
+  "name": "Modgen API",
+  "description": "Predikační platforma",
+  "version": "v1",
+  "created_at": "16022013",
+  "updated_at": "16022013",
+  "base_path": "https://modgen.net/api",
+  
+  "resources":{
+    "profile":{
+      "methods":{
+        "get":{
+          "path": "profile",
+          "http_method": "GET",
+          "description": "Detaily profilu."
+        },
+        "update":{
+          "path": "profile",
+          "http_method": "PUT",
+          "description": "Uprava profilu.",
+
+          "parameters":{
+            "user":{
+              "type": "hash",
+              "description": "Atributy k uprave profilu.",
+              "location": "body",
+              "required": true
+            }
+          }
+        }
+      }
+    },
+    "dataset":{
+      "methods":{
+        "list":{
+          "path": "dataset/list",
+          "http_method": "GET",
+          "description": "Seznam všech datasetu",
+
+          "parameters":{
+            "limit":{
+              "type": "integer",
+              "description": "Počet datasetu v odpovědi",
+              "required": false,
+              "location": "query"
+            },
+            "order_by":{
+              "type": "string",
+              "description": "Podle jakeho atributu se bude vysledek radit.",
+              "required": false,
+              "location": "query",
+              "format": "[a-zA-Z0-9_,]+"
+            },
+            "order_type":{
+              "type": "string",
+              "description": "Jak bude vysledek razen. 'asc' pro vzestupne, 'desc' pro sestupne",
+              "required": false,
+              "location": "query",
+              "format": "asc|desc"
+            }
+          }
+        },
+        "get":{
+          "path": "dataset/:id",
+          "http_method": "GET",
+          "description": "Detaily jednoho datasetu",
+
+          "parameters":{
+            "id":{
+              "type": "integer",
+              "description": "id datasetu",
+              "required": true,
+              "location": "path"
+            }
+          }
+        }
+      }
+    }
+  }
+}
