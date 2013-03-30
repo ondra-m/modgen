@@ -25,6 +25,42 @@ module Modgen
         query(params)
       end
 
+      def validate_require(key, value, required)
+        if value.nil? && required
+          raise Modgen::APIRequestError, "Parameter: #{key} is required"
+        end
+      end
+
+      def validate_type(value, type)
+        case type
+          when 'integer'
+            if !value.is_a?(Integer)
+              raise Modgen::APIRequestError, "Parameter: #{key} must be Integer"
+            end
+          when 'float'
+            if !value.is_a?(Integer) && !value.is_a?(Float)
+              raise Modgen::APIRequestError, "Parameter: #{key} must be Float"
+            end
+          when 'string'
+            if !value.is_a?(String)
+              raise Modgen::APIRequestError, "Parameter: #{key} must be String"
+            end
+          when 'hash'
+            if !value.is_a?(Hash)
+              raise Modgen::APIRequestError, "Parameter: #{key} must be Hash"
+            end
+          when 'file'
+        end
+      end
+
+      def validate_format(key, value, format)
+        if format
+          unless value =~ /#{format}/
+            raise Modgen::APIRequestError, "Parameter: #{key} doesnt have required format (#{format})"
+          end
+        end
+      end
+
       def validate_parameters(params = {})
         params.stringify_keys!
 
@@ -37,62 +73,22 @@ module Modgen
         @parameters.each do |key, value|
           param = params[key]
 
-          # Required
-          # --------------------------------------------------------------
-          if param.nil? && value['required']
-            raise Modgen::APIRequestError, "Parameter: #{key} is required"
-          end
+          validate_require(key, param, value['required'])
+
           if param.nil?
             next
           end
 
+          validate_type(param, value['type'])
+          validate_format(key, param, value['format'])
 
-
-          # Type
-          # --------------------------------------------------------------
-          case value['type']
-            when 'integer'
-              if !param.is_a?(Integer)
-                raise Modgen::APIRequestError, "Parameter: #{key} must be Integer"
-              end
-            when 'float'
-              if !param.is_a?(Integer) && !param.is_a?(Float)
-                raise Modgen::APIRequestError, "Parameter: #{key} must be Float"
-              end
-            when 'string'
-              if !param.is_a?(String)
-                raise Modgen::APIRequestError, "Parameter: #{key} must be String"
-              end
-            when 'hash'
-              if !param.is_a?(Hash)
-                raise Modgen::APIRequestError, "Parameter: #{key} must be Hash"
-              end
-            when 'file'
-          end
-
-
-
-          # Format
-          # --------------------------------------------------------------
-          if value['format']
-            unless param =~ /#{value['format']}/
-              raise Modgen::APIRequestError, "Parameter: #{key} doesnt have required format (#{value['format']})"
-            end
-          end
-
-
-
-          # Location
-          # --------------------------------------------------------------
           validated_parameters[value['location']][key] = params.delete(key)
+        end
 
-
-
-          # Unknow parameters
-          # --------------------------------------------------------------
-          if !params.empty?
-            raise Modgen::APIRequestError, "Parameters: #{params.to_s} are unknow"
-          end
+        # Unknow parameters
+        # --------------------------------------------------------------
+        if !params.empty?
+          raise Modgen::APIRequestError, "Parameters: #{params.to_s} are unknow"
         end
 
         validated_parameters
