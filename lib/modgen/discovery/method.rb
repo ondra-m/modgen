@@ -48,16 +48,7 @@ module Modgen
           when 'string';  check_type(param, value, String)
           when 'hash'
             check_type(param, value, Hash)
-
-            value.stringify_keys!
-
-            spec['attributes'].each do |k, v|
-              param_value = value[k]
-
-              if validate_parameter(k, v, param_value) == 'next'
-                next
-              end
-            end
+            validate_parameters(spec['attributes'], value)
           when 'file'
         end
 
@@ -68,41 +59,30 @@ module Modgen
         end
       end
 
-      def validate_parameters(params = {})
+      def validate_parameters(attributes, params = {})
         params.stringify_keys!
 
-        validated_parameters = {
-          'path'  => {},
-          'query' => {},
-          'body'  => {}
-        }
+        parameters_left = attributes.keys - params.keys
+        if !parameters_left.empty?
+          raise Modgen::APIRequestError, "Parameters: #{parameters_left} are unknow."
+        end
 
-        @parameters.each do |param, spec|
+        attributes.each do |param, spec|
           value = params[param]
 
           if validate_parameter(param, spec, value) == 'next'
             next
           end
-
-          validated_parameters[spec['location']][param] = params.delete(param)
         end
-
-        # Unknow parameters
-        # --------------------------------------------------------------
-        if !params.empty?
-          raise Modgen::APIRequestError, "Parameters: #{params.to_s} are unknow"
-        end
-
-        validated_parameters
       end
 
       def query(params)
         if !params.is_a?(Hash)
-          raise Modgen::TypeError, "Hash is required (#{params.class.name} inserted)"
+          raise Modgen::TypeError, "Parameters must be Hash. #{params.class.name} inserted."
         end
 
-        params = validate_parameters(params)
-        Modgen::API::Request.new(self, params).response
+        params = validate_parameters(@parameters, params)
+        # Modgen::API::Request.new(self, params).response
       end
 
       private
