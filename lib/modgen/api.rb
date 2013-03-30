@@ -18,14 +18,16 @@ module Modgen
     end
 
     def self.discovered?
-      !@@api.nil?
+      api.nil?
     end
 
     def self.methods
       @@api_methods.methods
     end
 
-    def self.method_missing(method, *args, &block)  
+    def self.method_missing(method, *args, &block)
+      discovered?
+
       @@api_methods.send(method, *args, &block)
     end
 
