@@ -10,7 +10,7 @@ nebo
 
     pry --gem
 
-Pro komunikaci s API je nejdříve nutné ve složce `test_api` spustit `rackup`.
+Pro komunikaci s API je nejdříve nutné ve složce `test_api` spustit `rackup`. Aby server reagoval na změny tak `shotgun config.ru --port=9292`. 
 
 ## Konfigurace
 
