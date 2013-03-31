@@ -7,7 +7,16 @@ module Modgen
       Modgen::API::SimpleRequest.new(Modgen::API_DISCOVERY_VERSIONS).response
     end
 
-    def self.version(id)
+    def self.version(id = :auto)
+      if id == :auto
+        versions.body['versions'].each do |version, details|
+          if details['preffered']
+            id = version
+            break
+          end
+        end
+      end
+
       response = Modgen::API::SimpleRequest.new(Modgen::API_DISCOVERY_VERSION.to_s.gsub(':id', id.to_s)).response
 
       if response.error?
@@ -20,15 +29,6 @@ module Modgen
     def self.discover(id = :auto)
       if Modgen::API.discovered?
         return nil
-      end
-
-      if id == :auto
-        versions.body['versions'].each do |version, details|
-          if details['preffered']
-            id = version
-            break
-          end
-        end
       end
 
       data = version(id).body

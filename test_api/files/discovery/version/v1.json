@@ -24,13 +24,14 @@
               "type": "hash",
               "description": "Atributy k uprave profilu.",
               "location": "body",
-              "required": true,
+              "required": false,
 
               "attributes":{
                 "name":{
                   "type": "string",
                   "description": "Jmeno uzivatele",
-                  "format": "[a-zA-Z0-9]+"
+                  "format": "[a-zA-Z0-9]+",
+                  "required": true
                 }
               }
             }

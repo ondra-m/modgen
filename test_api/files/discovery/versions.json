@@ -5,14 +5,16 @@
       "description": "První verze API, za 3 měsíce přestane být podporovaná",
       "preffered": true,
       "created_at": "15022013",
-      "updated_at": "15022013"
+      "updated_at": "15022013",
+      "link": "http://localhost:9292/api/discovery/version/v1"
     },
     "v2":{
       "name": "Nové API",
       "description": "Aktuální verze API",
       "preffered": false,
       "created_at": "16022013",
-      "updated_at": "16022013"
+      "updated_at": "16022013",
+      "link": "http://localhost:9292/api/discovery/version/v2"
     }
   }
 }

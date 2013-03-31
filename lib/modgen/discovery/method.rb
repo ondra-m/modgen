@@ -63,7 +63,7 @@ module Modgen
       def validate_parameters(attributes, params = {})
         params.stringify_keys!
 
-        parameters_left = attributes.keys - params.keys
+        parameters_left = params.keys - attributes.keys
         if !parameters_left.empty?
           raise Modgen::APIRequestError, "Parameters: #{parameters_left} are unknow."
         end

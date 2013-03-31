@@ -18,7 +18,7 @@ module Modgen
     end
 
     def self.discovered?
-      api.nil?
+      !@@api.nil?
     end
 
     def self.methods
