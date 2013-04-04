@@ -2,14 +2,14 @@ module Modgen
   module API
     class Method
 
-      attr_reader :name, :path, :full_path, :http_method, :description, :parameters
+      attr_reader :name, :path, :url, :http_method, :description, :parameters
       
       def initialize(name, values)
         @name   = name
         @values = values
 
         @path        = values['path']
-        @full_path   = URI.join(API_BASE_PATH, "#{Modgen::API.api.version}/", @path)
+        @url         = URI.join(API_BASE_PATH, "#{Modgen::API.api.version}/", @path)
         @http_method = values['http_method']
         @description = values['description']
         @parameters  = values['parameters']
@@ -105,7 +105,7 @@ module Modgen
         validate_parameters(@parameters, params)
 
         params = build_parameters(params)
-        Modgen::API::Request.new(self, params).response
+        Modgen::API::ApiRequest.new(self, params).response
       end
 
     end

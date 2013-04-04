@@ -2,19 +2,19 @@ module Modgen
   module API
     class Response
 
-      attr_reader :response, :request, :status, :content_type, :body
+      attr_reader :data, :request, :content_type, :body, :status
 
-      def initialize(response, request)
-        @response = response
-        @request  = request
+      def initialize(data, request)
+        @data    = data
+        @request = request
 
-        @status       = response.status
-        @content_type = response.headers['content-type']
+        @status       = data.status
+        @content_type = data.headers['content-type']
         @body         = _parse_body
       end
 
       def error?
-        @response.status != 200 && @response.status != 201
+        @status != 200 && @status != 201
       end
 
       def error_message
@@ -23,16 +23,16 @@ module Modgen
         end
       end
 
-      # def methods
-      #   [:request, :response, :status]
-      # end
+      def inspect
+        %{#<Modgen::API::Response::0x#{object_id} URL:"#{@request.url}" STATUS_CODE:"#{@status}" BODY:"#{@body}">}
+      end
 
       private
 
         def _parse_body
           case @content_type
             when 'application/json'
-              return MultiJson.load(@response.body)
+              return MultiJson.load(@data.body)
           end
         end
       

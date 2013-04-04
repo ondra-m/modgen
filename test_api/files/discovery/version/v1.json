@@ -4,7 +4,7 @@
   "version": "v1",
   "created_at": "16022013",
   "updated_at": "16022013",
-  "base_path": "https://modgen.net/api",
+  "base_url": "https://modgen.net/api",
   
   "resources":{
     "profile":{

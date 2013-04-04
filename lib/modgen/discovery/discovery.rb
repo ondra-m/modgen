@@ -4,7 +4,7 @@ module Modgen
     autoload :Build, 'modgen/discovery/build'
 
     def self.versions
-      Modgen::API::SimpleRequest.new(Modgen::API_DISCOVERY_VERSIONS).response
+      Modgen::API::Request.new(Modgen::API_DISCOVERY_VERSIONS).response
     end
 
     def self.version(id = :auto)
@@ -17,7 +17,9 @@ module Modgen
         end
       end
 
-      response = Modgen::API::SimpleRequest.new(Modgen::API_DISCOVERY_VERSION.to_s.gsub(':id', id.to_s)).response
+      params = {'path' => {'id' => id}}
+
+      response = Modgen::API::Request.new(Modgen::API_DISCOVERY_VERSION, params).response
 
       if response.error?
         raise Modgen::APIError, response.error_message
@@ -39,7 +41,7 @@ module Modgen
         version:     data['version'],
         created_at:  data['created_at'],
         updated_at:  data['updated_at'],
-        base_path:   data['base_path']
+        base_url:    data['base_url']
       }
       Modgen::API._api(api)
 

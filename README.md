@@ -46,7 +46,7 @@ Modgen::API.api.name
                .version
                .created_at
                .updated_at
-               .base_path
+               .base_url
 ```
 
 Detaily metody.

@@ -2,22 +2,17 @@ module Modgen
   module API
     class Request
 
-      attr_reader :api_method, :http_method, :path, :query, :body, :files, :uri
+      attr_reader :url, :http_method, :params
 
-      def initialize(api_method, params)
-        @api_method = api_method
-        
-        @http_method = @api_method.http_method.downcase.to_sym
+      def initialize(url, params = {}, http_method = :get)
 
-        @path  = params['path']
-        @query = params['query']
-        @body  = params['body']
-        @files = params['files']
+        @url  = url.to_s.gsub(/:([a-z][a-z0-9_]*)/) { params['path'][$1] }
+        @url += "?" + params['query'].to_param if params['query']
 
-        @uri  = @api_method.full_path.to_s.gsub(/:([a-z][a-z0-9_]*)/) { @path[$1] }
-        @uri += "?" + @query.to_param
+        @params      = params
+        @http_method = http_method.to_sym
       end
-
+      
       def response
         @response ||= _response
       end
@@ -25,11 +20,10 @@ module Modgen
       private
 
         def _response
-          response = Faraday.send(@http_method, @uri)
-
+          response = Faraday.send(@http_method, @url)
           Modgen::API::Response.new(response, self)
         end
-      
+
     end
   end
 end

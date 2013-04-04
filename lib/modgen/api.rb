@@ -1,11 +1,11 @@
 module Modgen
   module API
     
-    autoload :SimpleRequest,  'modgen/api/simple_request'
-    autoload :SimpleResponse, 'modgen/api/simple_response'
-
     autoload :Request,  'modgen/api/request'
     autoload :Response, 'modgen/api/response'
+
+    autoload :ApiRequest,  'modgen/api/api_request'
+    autoload :ApiResponse, 'modgen/api/api_response'
 
     autoload :Resource, 'modgen/discovery/resource'
     autoload :Method,   'modgen/discovery/method'
