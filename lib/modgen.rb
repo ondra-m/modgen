@@ -7,10 +7,9 @@ require "modgen/core_ext/object"
 require "modgen/core_ext/string"
 
 require "modgen/version"
+require "modgen/configuration"
 require "modgen/default_configuration"
 require "modgen/errors"
-
-require "modgen/configuration"
 
 require "faraday"
 require "multi_json"
@@ -19,9 +18,10 @@ module Modgen
 
   autoload :Discovery, 'modgen/discovery/discovery'
   autoload :API,       'modgen/api'
+  autoload :Session,   'modgen/session'
 
   def self.config
-    @config ||= Configuration.new(DEFAULT_CONFIGURATION)
+    @config ||= Modgen::Configuration.new(DEFAULT_CONFIGURATION)
   end
 
   def self.configure(&block)
