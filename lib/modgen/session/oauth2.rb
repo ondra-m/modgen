@@ -21,13 +21,17 @@ module Modgen
         end
       end
 
+      def self.authorize(auth_code)
+        Modgen::Session.get.authorize(auth_code)
+      end
+
       # Automaticaly open autorization url a waiting for callback.
       # Launchy gem is required
       #
       # Steps:
       # 1) create server
       # 2) launch browser and redirect to google api
-      # 3) confirm and google api redirect to localhost
+      # 3) confirm and modgen redirect to localhost
       # 4) server get code and start session
       # 5) close server - you are login
       def self.get_authorize_code
@@ -74,7 +78,13 @@ module Modgen
       end
 
       def authorize(auth_code)
+        @auth_code = auth_code
+
         @token = @client.auth_code.get_token(auth_code)
+      end
+
+      def execute(request)
+        
       end
 
     end
