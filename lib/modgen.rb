@@ -13,6 +13,7 @@ require "modgen/errors"
 
 require "faraday"
 require "multi_json"
+require "mimemagic"
 
 module Modgen
 

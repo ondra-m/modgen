@@ -14,7 +14,7 @@ module Modgen
 
         Modgen::Session.store(client)
 
-        if config.redirect_uri == nil
+        if config.oauth2.redirect_uri == nil
           get_authorize_code
         else
           client.authorize_url

@@ -11,6 +11,8 @@ module Modgen
 
         @params      = params
         @http_method = http_method.to_sym
+
+        @files = _files
       end
       
       def response
@@ -19,8 +21,19 @@ module Modgen
 
       private
 
+        def _files
+          files = {}
+
+          @params['files'].each do |name, path|
+            mime = MimeMagic.by_path(path)
+            files[name] = Faraday::UploadIO.new(path, mime)
+          end
+
+          files
+        end
+
         def _response
-          response = Faraday.send(@http_method, @url)
+          response = Faraday.send(@http_method, @url, @files)
           Modgen::API::Response.new(response, self)
         end
 

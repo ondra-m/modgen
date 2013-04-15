@@ -26,20 +26,21 @@ module Modgen
     end
 
     def self.method_missing(method, *args, &block)
-      discovered?
+      api
 
       @@api_methods.send(method, *args, &block)
     end
 
-    protected
+    # For set api and api methods
+    #
+    #
+    def self._api(api)
+      @@api = OpenStruct.new(api)
+    end
 
-      def self._api(api)
-        @@api = OpenStruct.new(api)
-      end
-
-      def self._api_methods(api)
-        @@api_methods = api
-      end
+    def self._api_methods(api)
+      @@api_methods = api
+    end
 
   end
 end

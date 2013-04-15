@@ -1,7 +1,13 @@
 module Modgen
   module Discovery
 
-    autoload :Build, 'modgen/discovery/build'
+    def self.preffered_version
+      versions.body['versions'].each do |version, details|
+        if details['preffered']
+          return version
+        end
+      end
+    end
 
     def self.versions
       Modgen::API::Request.new(Modgen::API_DISCOVERY_VERSIONS).response
@@ -9,12 +15,7 @@ module Modgen
 
     def self.version(id = :auto)
       if id == :auto
-        versions.body['versions'].each do |version, details|
-          if details['preffered']
-            id = version
-            break
-          end
-        end
+        id = preffered_version
       end
 
       params = {'path' => {'id' => id}}
@@ -29,10 +30,7 @@ module Modgen
     end
 
     def self.discover(id = :auto)
-      if Modgen::API.discovered?
-        return nil
-      end
-
+      
       data = version(id).body
 
       api = {

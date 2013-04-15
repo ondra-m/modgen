@@ -1,21 +1,21 @@
 module Modgen
   module Session
 
+    autoload :Oauth2, 'modgen/session/oauth2'
+
     @@session = nil
     
-    def self.oatuh2
-      Modgen::Session::Oatuh2
+    def self.oauth2
+      Modgen::Session::Oauth2
     end
 
-    protected
+    def store(client)
+      @@session = client
+    end
 
-      def store(client)
-        @@session = client
-      end
-
-      def get
-        @@session
-      end
+    def get
+      @@session
+    end
     
   end
 end
