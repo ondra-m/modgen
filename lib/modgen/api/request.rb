@@ -2,17 +2,15 @@ module Modgen
   module API
     class Request
 
-      attr_reader :url, :http_method, :params
+      attr_reader :origin_url, :url, :http_method, :data
 
-      def initialize(url, params = {}, http_method = :get)
+      def initialize(url, data = {}, http_method = :get)
 
-        @url  = url.to_s.gsub(/:([a-z][a-z0-9_]*)/) { params['path'][$1] }
-        @url += "?" + params['query'].to_param if params['query']
+        @origin_url = url
+        @url = url.to_s.gsub(/:([a-z][a-z0-9_]*)/) { data['path'][$1] }
 
-        @params      = params
+        @data        = data
         @http_method = http_method.to_sym
-
-        @files = _files
       end
       
       def response
@@ -21,19 +19,13 @@ module Modgen
 
       private
 
-        def _files
-          files = {}
-
-          @params['files'].each do |name, path|
-            mime = MimeMagic.by_path(path)
-            files[name] = Faraday::UploadIO.new(path, mime)
-          end
-
-          files
-        end
-
         def _response
-          response = Faraday.send(@http_method, @url, @files)
+          conn = Faraday.new(url: @url)
+
+          response = conn.send(@http_method, @data['params']) { |req|
+            req.body = @data['body']
+          }
+
           Modgen::API::Response.new(response, self)
         end
 

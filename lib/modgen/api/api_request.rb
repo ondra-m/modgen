@@ -4,10 +4,10 @@ module Modgen
       
       attr_reader :api_method
 
-      def initialize(api_method, params)
+      def initialize(api_method, data)
         @api_method = api_method
 
-        super(@api_method.url, params, @api_method.http_method.downcase)
+        super(@api_method.url, data, @api_method.http_method.downcase)
       end
 
       private

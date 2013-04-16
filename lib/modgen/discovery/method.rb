@@ -2,17 +2,17 @@ module Modgen
   module API
     class Method
 
-      attr_reader :name, :path, :url, :http_method, :description, :parameters
+      attr_reader :name, :path, :url, :http_method, :description, :method_parameters
       
       def initialize(name, values)
         @name   = name
         @values = values
 
-        @path        = values['path']
-        @url         = URI.join(API_BASE_PATH, "#{Modgen::API.api.version}/", @path)
-        @http_method = values['http_method']
-        @description = values['description']
-        @parameters  = values['parameters']
+        @path               = values['path']
+        @url                = URI.join(API_BASE_PATH, "#{Modgen::API.api.version}/", @path)
+        @http_method        = values['http_method']
+        @description        = values['description']
+        @method_parameters  = values['parameters']
       end
 
       def call(params)
@@ -77,20 +77,28 @@ module Modgen
         end
       end
 
-      def build_parameters(params = {})
+      def build_file(path)
+        mime = MimeMagic.by_path(path)
+        Faraday::UploadIO.new(path, mime)
+      end
+
+      def build_request_data(params = {})
         result = {
-          'path'  => {},
-          'query' => {},
-          'body'  => {},
-          'files' => {}
+          'path'   => {},
+          'params' => {},
+          'body'   => {}
         }
 
         params.each do |key, value|
-          if @parameters[key]['type'] == 'file'
-            result['files'][key] = value
-          else
-            type = @parameters[key]['location']
-            result[type][key] = value
+          case @method_parameters[key]['location']
+            when 'path'; result['path'][key] = value
+            when 'body'; result['body'][key] = value
+            else
+              if @method_parameters[key]['type'] == 'file'
+                result['params'][key] = build_file(val)
+              else
+                result['params'][key] = val
+              end
           end
         end
 
@@ -102,10 +110,10 @@ module Modgen
           raise Modgen::TypeError, "Parameters must be Hash. #{params.class.name} inserted."
         end
 
-        validate_parameters(@parameters, params)
+        validate_parameters(@method_parameters, params)
 
-        params = build_parameters(params)
-        Modgen::API::ApiRequest.new(self, params).response
+        request_data = build_request_data(params)
+        Modgen::API::ApiRequest.new(self, request_data).response
       end
 
     end

@@ -51,20 +51,17 @@
               "type": "integer",
               "description": "Počet datasetu v odpovědi",
               "required": false,
-              "location": "query"
             },
             "order_by":{
               "type": "string",
               "description": "Podle jakeho atributu se bude vysledek radit.",
               "required": false,
-              "location": "query",
               "format": "[a-zA-Z0-9_,]+"
             },
             "order_type":{
               "type": "string",
               "description": "Jak bude vysledek razen. 'asc' pro vzestupne, 'desc' pro sestupne",
               "required": false,
-              "location": "query",
               "format": "asc|desc"
             }
           }
