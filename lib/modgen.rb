@@ -1,7 +1,3 @@
-# Test API
-#
-# in 'test_api' run 'shotgun config.ru --port=9292'
-
 require "modgen/core_ext/hash"
 require "modgen/core_ext/object"
 require "modgen/core_ext/string"
