@@ -3,13 +3,15 @@ require 'oauth2'
 module Modgen
   module Session
     class Oauth2
+
+      def self.config
+        Modgen.config
+      end
       
       # Start session
       #
       #
       def self.start
-        config = Modgen.config
-
         client = Modgen::Session::Oauth2.new
 
         Modgen::Session.store(client)

@@ -9,16 +9,16 @@ module Modgen
         @values = values
 
         @path               = values['path']
-        @url                = URI.join(API_BASE_PATH, "#{Modgen::API.api.version}/", @path)
+        @url                = URI.join(Modgen.config.api.base_url, "#{Modgen::API.api.version}/", @path)
         @http_method        = values['http_method']
         @description        = values['description']
         @method_parameters  = values['parameters']
       end
 
       def call(params)
-        if params == nil
-          return self
-        end
+        # if params == nil
+        #   return self
+        # end
 
         query(params)
       end
@@ -61,6 +61,10 @@ module Modgen
       end
 
       def validate_parameters(attributes, params = {})
+        if !attributes
+          return nil
+        end
+
         params.stringify_keys!
 
         parameters_left = params.keys - attributes.keys
@@ -95,9 +99,9 @@ module Modgen
             when 'body'; result['body'][key] = value
             else
               if @method_parameters[key]['type'] == 'file'
-                result['params'][key] = build_file(val)
+                result['params'][key] = build_file(value)
               else
-                result['params'][key] = val
+                result['params'][key] = value
               end
           end
         end
@@ -106,13 +110,15 @@ module Modgen
       end
 
       def query(params)
+        request_data = {}
+
         if !params.is_a?(Hash)
           raise Modgen::TypeError, "Parameters must be Hash. #{params.class.name} inserted."
         end
 
         validate_parameters(@method_parameters, params)
-
         request_data = build_request_data(params)
+
         Modgen::API::ApiRequest.new(self, request_data).response
       end
 

@@ -17,6 +17,9 @@ module Modgen
             end
 
             if value.nil?
+              if @#{key}.is_a?(Proc)
+                return @#{key}.call
+              end
               return @#{key}
             end
 

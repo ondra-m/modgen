@@ -23,15 +23,27 @@
             "user":{
               "type": "hash",
               "description": "Atributy k uprave profilu.",
-              "location": "body",
-              "required": false,
+              "location": "params",
+              "required": true,
 
               "attributes":{
-                "name":{
+                "first_name":{
                   "type": "string",
                   "description": "Jmeno uzivatele",
                   "format": "[a-zA-Z0-9]+",
-                  "required": true
+                  "required": false
+                },
+                "last_name":{
+                  "type": "string",
+                  "description": "Prijmeni uzivatele",
+                  "format": "[a-zA-Z0-9]+",
+                  "required": false
+                },
+                "email":{
+                  "type": "string",
+                  "description": "E-mail uzivatele",
+                  "format": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-_]+\.[a-zA-Z]{2,4}$",
+                  "required": false
                 }
               }
             }
@@ -50,7 +62,7 @@
             "limit":{
               "type": "integer",
               "description": "Počet datasetu v odpovědi",
-              "required": false,
+              "required": false
             },
             "order_by":{
               "type": "string",

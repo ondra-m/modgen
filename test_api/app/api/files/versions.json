@@ -6,7 +6,7 @@
       "preffered": true,
       "created_at": "15022013",
       "updated_at": "15022013",
-      "link": "http://localhost:9292/api/discovery/version/v1"
+      "link": "http://localhost:3000/api/discovery/version/v1"
     },
     "v2":{
       "name": "Nové API",
@@ -14,7 +14,7 @@
       "preffered": false,
       "created_at": "16022013",
       "updated_at": "16022013",
-      "link": "http://localhost:9292/api/discovery/version/v2"
+      "link": "http://localhost:3000/api/discovery/version/v2"
     }
   }
 }

@@ -14,4 +14,8 @@ module Modgen
   class TypeError < StandardError
   end
 
+  # Configuration error
+  class ConfigurationError < StandardError
+  end
+
 end

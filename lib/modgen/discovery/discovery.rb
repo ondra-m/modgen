@@ -1,6 +1,10 @@
 module Modgen
   module Discovery
 
+    def self.config
+      Modgen.config
+    end
+
     def self.preffered_version
       versions.body['versions'].each do |version, details|
         if details['preffered']
@@ -10,7 +14,7 @@ module Modgen
     end
 
     def self.versions
-      Modgen::API::Request.new(Modgen::API_DISCOVERY_VERSIONS).response
+      Modgen::API::Request.new(config.api.discovery_versions_url).response
     end
 
     def self.version(id = :auto)
@@ -20,7 +24,7 @@ module Modgen
 
       params = {'path' => {'id' => id}}
 
-      response = Modgen::API::Request.new(Modgen::API_DISCOVERY_VERSION, params).response
+      response = Modgen::API::Request.new(config.api.discovery_version_url, params).response
 
       if response.error?
         raise Modgen::APIError, response.error_message
@@ -46,6 +50,8 @@ module Modgen
       resources = Modgen::API::Resource.new('resources', data['resources'])
 
       Modgen::API._api_methods(resources)
+
+      nil
     end
 
   end

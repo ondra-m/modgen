@@ -1,6 +1,8 @@
+require 'ostruct'
+
 module Modgen
   module API
-    
+
     autoload :Request,  'modgen/api/request'
     autoload :Response, 'modgen/api/response'
 

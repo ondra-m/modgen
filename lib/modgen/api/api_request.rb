@@ -13,8 +13,9 @@ module Modgen
       private
 
         def _response
-          response = Faraday.send(@http_method, @url)
-          Modgen::API::ApiResponse.new(response, self)
+          response = Modgen::Session.get.execute(self)
+          
+          Modgen::API::Response.new(response, self)
         end
 
     end

@@ -31,9 +31,10 @@ module Modgen
         def build_resource(name, values)
           resource = Modgen::API::Resource.new(name, values)
 
-          @methods << name.to_sym
-          
-          self.class.send(:define_method, name) { resource }
+          @methods << name.to_sym          
+
+          metaclass = class << self; self; end
+          metaclass.send(:define_method, name) { resource }
         end
 
         def build_methods(value)
@@ -42,7 +43,8 @@ module Modgen
 
             @methods << key.to_sym
 
-            self.class.send(:define_method, key) { |params=nil| method.send(:call, params) }
+            metaclass = class << self; self; end
+            metaclass.send(:define_method, key) { |params={}| method.send(:call, params) }
           end
         end
 

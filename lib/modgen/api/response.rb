@@ -18,7 +18,7 @@ module Modgen
       end
 
       def error_message
-        if error?
+        if error? && @body
           @body['error']
         end
       end
