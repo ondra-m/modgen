@@ -1,7 +1,5 @@
 # Modgen API klient
 
-
-
 ## Instalation
 
 Install
@@ -71,7 +69,7 @@ List of all available conf.
 
 ## Usage
 
-First you must discovery API. For displaying all available versions:
+First you must discovery API. For displaying all available versions.
 
 
 
@@ -114,3 +112,10 @@ Modgen::API.api.name
 ```ruby
 Modgen::API.dataset.get(:id 1)
 ```
+
+
+## Test
+
+First start testing API in /test_api and than.
+
+    rake
