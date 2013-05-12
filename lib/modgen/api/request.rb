@@ -4,6 +4,36 @@ module Modgen
 
       attr_reader :origin_url, :url, :http_method, :data
 
+      # Create Request
+      #
+      # == Data
+      # === path
+      #   data['path'] = {id: 1}
+      #   url = http://a.a/:id
+      #
+      # url will be transfered to
+      #   http://a.a/1
+      #
+      # === params
+      # normal parameters send with request
+      #
+      # === body
+      # this will be posted to the body of request
+      #
+      # == Parameters:
+      # url:: full www adress
+      # data::
+      #   Hash
+      #     {
+      #       'path'   => {},
+      #       'params' => {},
+      #       'body'   => {}
+      #     }
+      # http_method::
+      #   http method
+      #   
+      #   *default:* :get
+      #
       def initialize(url, data = {}, http_method = :get)
 
         @origin_url = url
@@ -17,6 +47,8 @@ module Modgen
         @http_method = http_method.to_sym
       end
       
+      # Send request
+      #
       def response
         @response ||= _response
       end

@@ -23,6 +23,8 @@ module Modgen
         query(params)
       end
 
+      # Check if value has property type(s)
+      #
       def check_type(param, value, *types)
         types.each do |type|
           return(true) if value.is_a?(type)
@@ -31,6 +33,8 @@ module Modgen
         raise Modgen::APIRequestError, "Parameter #{param} has invalid type. Must be #{types.join(' or ')}."
       end
 
+      # Check one parameter
+      #
       def validate_parameter(param, spec, value)
         if value.nil?
           if spec['required']
@@ -60,6 +64,8 @@ module Modgen
         end
       end
 
+      # Check all parameters
+      #
       def validate_parameters(attributes, params = {})
         if !attributes
           return nil
@@ -86,6 +92,8 @@ module Modgen
         Faraday::UploadIO.new(path, mime)
       end
 
+      # Buld request data based on discoverd API
+      #
       def build_request_data(params = {})
         result = {
           'path'   => {},
@@ -109,6 +117,8 @@ module Modgen
         result
       end
 
+      # Create request and call response on it.
+      #
       def query(params)
         request_data = {}
 
@@ -119,7 +129,7 @@ module Modgen
         validate_parameters(@method_parameters, params)
         request_data = build_request_data(params)
 
-        Modgen::API::ApiRequest.new(self, request_data).response
+        Modgen::API::APIRequest.new(self, request_data).response
       end
 
     end

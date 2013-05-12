@@ -3,11 +3,6 @@ require "uri"
 module Modgen
   SITE_URL = 'http://modgen.net'
 
-  # API_BASE_PATH = URI('http://localhost:9292/api/')
-
-  # API_DISCOVERY_VERSIONS = URI.join(API_BASE_PATH, 'discovery/versions')
-  # API_DISCOVERY_VERSION  = URI.join(API_BASE_PATH, 'discovery/version/:id')
-
   OAUTH2_REDIRECT_URI = 'http://localhost/oauth2callback'
 
   API_CONFIGURATION = {

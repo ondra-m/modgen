@@ -17,10 +17,25 @@ module Modgen
   autoload :API,       'modgen/api'
   autoload :Session,   'modgen/session'
 
+  # Line set and get configuration
+  #
+  # *Set:* Modgen.config.key = "value"
+  #
+  # *Get:* Modgen.config.key
+  #
+  # == Returns:
+  # Top of Modgen::Configuration
+  #
   def self.config
     @config ||= Modgen::Configuration.new(DEFAULT_CONFIGURATION)
   end
 
+  # Cofiguration with DSL
+  #
+  #   Modgen.configure do
+  #     key "value"
+  #   end
+  #
   def self.configure(&block)
     config.instance_eval(&block)
   end

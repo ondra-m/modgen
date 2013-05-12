@@ -8,7 +8,7 @@ module Modgen
       
       def self.start
         if config.api_key.key == nil
-          raise Modgen::ConfigurationError, "Api key cannot be nil."
+          raise Modgen::ConfigurationError, "API key cannot be nil."
         end
 
         client = Modgen::Session::APIKey.new

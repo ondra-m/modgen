@@ -1,8 +1,8 @@
 module Modgen
   module API
-    class ApiResponse < Response
+    class APIResponse < Response
 
-      
+      # APIResponse is now the same as Response
 
     end
   end

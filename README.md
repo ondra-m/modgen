@@ -33,8 +33,8 @@ List of all available conf.
 <table>
   <thead>
     <tr>
-      <td><b>key</b></td>
-      <td><b>example and description</b></td>
+      <th><b>key</b></th>
+      <th><b>example and description</b></th>
     </tr>
   </thead>
   <tbody>

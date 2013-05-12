@@ -6,8 +6,8 @@ module Modgen
     autoload :Request,  'modgen/api/request'
     autoload :Response, 'modgen/api/response'
 
-    autoload :ApiRequest,  'modgen/api/api_request'
-    autoload :ApiResponse, 'modgen/api/api_response'
+    autoload :APIRequest,  'modgen/api/api_request'
+    autoload :APIResponse, 'modgen/api/api_response'
 
     autoload :Resource, 'modgen/discovery/resource'
     autoload :Method,   'modgen/discovery/method'
@@ -23,24 +23,35 @@ module Modgen
       !@@api.nil?
     end
 
+    # All available API methods on top
+    #
     def self.methods
       @@api_methods.methods
     end
 
+    # All api methods go there
+    #
     def self.method_missing(method, *args, &block)
       api
 
       @@api_methods.send(method, *args, &block)
     end
 
-    # For set api and api methods
+    # Set api from discovery
     #
+    # == Parameters:
+    # api:: Hash
     #
-    def self._api(api)
+    def self.set_api(api)
       @@api = OpenStruct.new(api)
     end
 
-    def self._api_methods(api)
+    # Set api methods from discovery
+    #
+    # == Parameters:
+    # api:: Modgen::API::Resource
+    #
+    def self.set_api_methods(api)
       @@api_methods = api
     end
 
