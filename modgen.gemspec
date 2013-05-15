@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["moravcik.ondrej@gmail.com"]
   spec.description   = %q{Modgen allow discover and use modgen's API}
   spec.summary       = %q{Gem for using modgen's API}
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/ondra-m/modgen"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
