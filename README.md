@@ -110,7 +110,7 @@ Modgen::API.api.name
 
 
 ```ruby
-Modgen::API.dataset.get(:id 1)
+Modgen::API.dataset.get(id: 1)
 ```
 
 
